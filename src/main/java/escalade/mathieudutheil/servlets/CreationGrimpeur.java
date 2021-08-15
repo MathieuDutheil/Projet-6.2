@@ -4,17 +4,22 @@ import escalade.mathieudutheil.forms.CreationGrimpeurForm;
 import escalade.mathieudutheil.model.Civilite;
 import escalade.mathieudutheil.model.Grimpeur;
 import escalade.mathieudutheil.service.CiviliteService;
+import javafx.application.Application;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Configurable;
+import org.springframework.context.ApplicationContext;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
 
-
+import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-
+@Configurable
 public class CreationGrimpeur  extends HttpServlet {
     private static final String ATTRIBUTE_GRIMPEUR = "grimpeur";
     public static final String ATTRIBUTE_FORM ="form";
@@ -25,19 +30,23 @@ public class CreationGrimpeur  extends HttpServlet {
     @Autowired
     private CiviliteService civiliteService;
 
+    @Override
+    public void init(ServletConfig config) throws ServletException{
+        super.init(config);
 
+        ApplicationContext ac =(ApplicationContext) config.getServletContext().getAttribute("applicationContext");
+    }
 
+    public CreationGrimpeur() {
 
-
+    }
 
     public void doGet(HttpServletRequest request, HttpServletResponse response ) throws ServletException, IOException {
-        /* À la réception d'une requête GET, simple affichage du formulaire */
+        // À la réception d'une requête GET, simple affichage du formulaire
 
 
-        /*Iterable<Civilite> listeCivilites = civiliteService.getCivilites();
-        request.setAttribute("listeCivilites", listeCivilites);*/
-
-
+        Iterable<Civilite> listeCivilites = civiliteService.getCivilites();
+        // request.setAttribute("listeCivilites", listeCivilites);
 
         this.getServletContext().getRequestDispatcher( VUE_FORM ).forward( request, response );
     }
